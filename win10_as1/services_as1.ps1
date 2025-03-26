@@ -1,4 +1,4 @@
-$services = @(
+$services_disabled = @(
     'NlaSvc',
     'BthAvctpSvc',
     'CDPSvc',
@@ -70,15 +70,24 @@ $services = @(
     'BITS'
 )
 
-foreach ($service in $services) {
-    try {
-        Set-Service -Name $service -StartupType Disabled
-        Write-Host "$($service) is Disabled" -ForegroundColor Green
-    } catch {
-        Write-Host "Something wrong with $($service): $_" -ForegroundColor Red
+$services_automatic = @(
+    'AppIDSvc'
+)
+
+function set_service_startuptype() {
+    param (
+        $services, 
+        $type
+    )
+    foreach ($service in $services) {
+        try {
+            sc.exe config $service start = $type | Out-Null
+            Write-Host "$($service) is $($type)" -ForegroundColor Green
+        } catch {
+            Write-Host "Something wrong with $($service): $_" -ForegroundColor Red
+        }
     }
 }
 
-# foreach ($service in $services) {
-#     Write-Host "StartupType служби $($service) - $((Get-Service $service).StartType)" -ForegroundColor Yellow
-# }
+set_service_startuptype -Services $services_disabled -Type Disabled
+set_service_startuptype -Services $services_automatic -Type Automatic

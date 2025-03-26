@@ -9,7 +9,8 @@ $services_automatic = @(
     'LanmanServer',
     'WlanSvc',
     'NetTcpPortSharing',
-    'WinRM'
+    'WinRM',
+    'AppIDSvc'
 )
 
 $services_manual = @(
@@ -83,7 +84,7 @@ function set_service_startuptype() {
     )
     foreach ($service in $services) {
         try {
-            Set-Service -Name $service -StartupType $type
+            sc.exe config $service start = $type | Out-Null
             Write-Host "$($service) is $($type)" -ForegroundColor Green
         } catch {
             Write-Host "Something wrong with $($service): $_" -ForegroundColor Red

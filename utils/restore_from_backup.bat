@@ -1,4 +1,5 @@
-C:\LGPO\LGPO.exe /g C:\LGPO\backup
+cd /d %~dp0
+..\LGPO.exe /g C:\
 
 @echo off
 pause
